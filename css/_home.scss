@@ -653,6 +653,7 @@ main {
             display: flex;
             color: white;
             font-weight: bold;
+            transition: all 0.3s ease;
 
             & > .home_footer_btn_icon {
                 padding-top: 4px;
@@ -663,6 +664,8 @@ main {
             }
 
             &:hover {
+                transform: scale(1.05);
+
                 & > .home_footer_btn_icon {
                     transform: scale(1.2);
                 }
