@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,7 +7,6 @@
     <title>Document</title>
     <link rel="stylesheet" href="./css/all.css">
 </head>
-
 <body>
     <div id="app">
         <header class="header">
@@ -37,8 +35,7 @@
                             </a>
                         </li>
                     </ul>
-                    <div id="hamMenu_btn" class="hamMenu_btn_open"
-                        @click="() => hamMenuSwitch()">
+                    <div id="hamMenu_btn" class="hamMenu_btn_open" @click="() => hamMenuSwitch()">
                         <svg width="18" height="12" viewBox="0 0 18 12" xmlns="http://www.w3.org/2000/svg">
                             <path d="M0 12H18V10H0V12ZM0 7H18V5H0V7ZM0 0V2H18V0H0Z" />
                         </svg>
@@ -46,7 +43,6 @@
                     </div>
                 </nav>
             </div>
-
         </header>
         <div id="hamMenu" class="hamMenu" :class="{show:hamMenu}">
             <div class="hamMenu_top">
@@ -59,8 +55,7 @@
                     </div>
                     <img src="./img/AI工具王.png" alt="AI工具王LOGO">
                 </div>
-                <div class="hamMenu_btn_close"
-                @click="() => hamMenuSwitch()">
+                <div class="hamMenu_btn_close" @click="() => hamMenuSwitch()">
                     <svg width="14" height="14" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
                         <path
                             d="M14 1.41L12.59 0L7 5.59L1.41 0L0 1.41L5.59 7L0 12.59L1.41 14L7 8.41L12.59 14L14 12.59L8.41 7L14 1.41Z" />
@@ -288,7 +283,6 @@
                         <ul class="home_product_filter_tag_container">
                             <li class="fs-3 " v-for="(tag, index) in categoryTag" :key="index"
                                 :class="{active:tag.active}" @click="categoryTagSwitch(index)">{{tag.name}}</li>
-
                             <!--                             <li class="fs-3">聊天</li>
                             <li class="fs-3">影像辨識</li>
                             <li class="fs-3">翻譯</li>
@@ -459,25 +453,24 @@
                                     <p class="fs-2 home_product_card_sub">{{item.content}}</p>
                                 </div>
                             </a>
-                                <div class="home_product_card_name">
-                                    <p class="fs-3">{{item.style}}</p>
-                                    <p class="fs-3">{{item.name}}</p>
-                                    
-                                </div>
-                                <div class="home_product_card_hashtag">
-                                    <p class="fs-3">{{item.tag}}</p>
-                                    <button type="button" class=" home_product_card_btn">
-                                        <div class="home_product_card_btn_icon">
-                                            <svg width="18" height="20" viewBox="0 0 18 20"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path
-                                                    d="M15 14.08C14.24 14.08 13.56 14.38 13.04 14.85L5.91 10.7C5.96 10.47 6 10.24 6 10C6 9.76 5.96 9.53 5.91 9.3L12.96 5.19C13.5 5.69 14.21 6 15 6C16.66 6 18 4.66 18 3C18 1.34 16.66 0 15 0C13.34 0 12 1.34 12 3C12 3.24 12.04 3.47 12.09 3.7L5.04 7.81C4.5 7.31 3.79 7 3 7C1.34 7 0 8.34 0 10C0 11.66 1.34 13 3 13C3.79 13 4.5 12.69 5.04 12.19L12.16 16.35C12.11 16.56 12.08 16.78 12.08 17C12.08 18.61 13.39 19.92 15 19.92C16.61 19.92 17.92 18.61 17.92 17C17.92 15.39 16.61 14.08 15 14.08Z" />
-                                            </svg>
-                                        </div>
-                                    </button>
-                                </div>
+                            <div class="home_product_card_name">
+                                <p class="fs-3">{{item.style}}</p>
+                                <p class="fs-3">{{item.name}}</p>
+                            </div>
+                            <div class="home_product_card_hashtag">
+                                <p class="fs-3">{{item.tag}}</p>
+                                <button type="button" class=" home_product_card_btn">
+                                    <div class="home_product_card_btn_icon">
+                                        <svg width="18" height="20" viewBox="0 0 18 20"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M15 14.08C14.24 14.08 13.56 14.38 13.04 14.85L5.91 10.7C5.96 10.47 6 10.24 6 10C6 9.76 5.96 9.53 5.91 9.3L12.96 5.19C13.5 5.69 14.21 6 15 6C16.66 6 18 4.66 18 3C18 1.34 16.66 0 15 0C13.34 0 12 1.34 12 3C12 3.24 12.04 3.47 12.09 3.7L5.04 7.81C4.5 7.31 3.79 7 3 7C1.34 7 0 8.34 0 10C0 11.66 1.34 13 3 13C3.79 13 4.5 12.69 5.04 12.19L12.16 16.35C12.11 16.56 12.08 16.78 12.08 17C12.08 18.61 13.39 19.92 15 19.92C16.61 19.92 17.92 18.61 17.92 17C17.92 15.39 16.61 14.08 15 14.08Z" />
+                                        </svg>
+                                    </div>
+                                </button>
+                            </div>
                         </li>
-<!--                         <li>
+                        <!--                         <li>
                             <div class="home_product_card_img">
                                 <img src="./img/Rectangle 35-2.png" alt="封面圖">
                             </div>
@@ -608,28 +601,27 @@
                 </div>
                 <div class="home_product_pagination">
                     <ul class="home_product_pagination_container">
-                      <li class="fs-2" v-if="startPage > 1" @click="prevPage()">
-                        <div class="next_icon prev_icon">
-                            <svg width="6" height="8" viewBox="0 0 6 8" xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M0.726562 7.06L3.7799 4L0.726562 0.94L1.66656 0L5.66656 4L1.66656 8L0.726562 7.06Z" />
-                            </svg>
-                        </div>
-                      </li>
-                      <li class="fs-2" v-for="page in visiblePages" :key="page"
-                        :class="{ active: page === current }"
-                        @click="current = page">{{ page }}</li>
-                      <li class="fs-2next" v-if="endPage < total" @click="nextPage()">
-                        <div class="next_icon">
-                            <svg width="6" height="8" viewBox="0 0 6 8" xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M0.726562 7.06L3.7799 4L0.726562 0.94L1.66656 0L5.66656 4L1.66656 8L0.726562 7.06Z" />
-                            </svg>
-                        </div>
-                      </li>
+                        <li class="fs-2" v-if="startPage > 1" @click="prevPage()">
+                            <div class="next_icon prev_icon">
+                                <svg width="6" height="8" viewBox="0 0 6 8" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M0.726562 7.06L3.7799 4L0.726562 0.94L1.66656 0L5.66656 4L1.66656 8L0.726562 7.06Z" />
+                                </svg>
+                            </div>
+                        </li>
+                        <li class="fs-2" v-for="page in visiblePages" :key="page" :class="{ active: page === current }"
+                            @click="current = page">{{ page }}</li>
+                        <li class="fs-2next" v-if="endPage < total" @click="nextPage()">
+                            <div class="next_icon">
+                                <svg width="6" height="8" viewBox="0 0 6 8" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M0.726562 7.06L3.7799 4L0.726562 0.94L1.66656 0L5.66656 4L1.66656 8L0.726562 7.06Z" />
+                                </svg>
+                            </div>
+                        </li>
                     </ul>
-                  </div>
-<!--                 <div class="home_product_pagination">
+                </div>
+                <!--                 <div class="home_product_pagination">
                     <ul class="home_product_pagination_container">
                         <li class="fs-2 active">1</li>
                         <li class="fs-2">2</li>
@@ -653,16 +645,15 @@
                 </div>
                 <div class="price_qa_content">
                     <ul>
-                        <li v-for="(qA, index) in qAs" :key="index" 
-                        :class="{show:qA.active}"
-                        @click="() => qASwitch(index)">
+                        <li v-for="(qA, index) in qAs" :key="index" :class="{show:qA.active}"
+                            @click="() => qASwitch(index)">
                             <div class="price_qa_content_title">
-                                <div class="price_qa_content_title_icon" >
+                                <div class="price_qa_content_title_icon">
                                     <svg width="14" height="14" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M14 8H8V14H6V8H0V6H6V0H8V6H14V8Z" />
                                     </svg>
                                 </div>
-                                <div class="price_qa_content_title_icon" >
+                                <div class="price_qa_content_title_icon">
                                     <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <g clip-path="url(#clip0_327_1232)">
                                             <path d="M19 13H5V11H19V13Z" />
@@ -682,7 +673,7 @@
                                 </p>
                             </div>
                         </li>
-<!--                         <li class="show">
+                        <!--                         <li class="show">
                             <div class="price_qa_content_title">
                                 <div class="price_qa_content_title_icon" style="display: none;">
                                     <svg width="14" height="14" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
@@ -835,13 +826,11 @@
                             <path
                                 d="M0.666748 5.99984L1.60675 6.93984L5.33342 3.21984V11.3332H6.66675V3.21984L10.3867 6.9465L11.3334 5.99984L6.00008 0.666504L0.666748 5.99984Z" />
                         </svg>
-
                     </div>
                 </button>
             </div>
         </footer>
     </div>
-
     <!-- axios -->
     <script src=' https://cdnjs.cloudflare.com/ajax/libs/axios/0.9.1/axios.min.js '
         integrity='sha512-Xk3wWei2TGrsh9kDSBKUMIjw/86sLUvhtnv9f7fOuIwhhiUTKz8szkWkzHthrM5Bb3Bu9idSzkxOrkzhcneuiw=='

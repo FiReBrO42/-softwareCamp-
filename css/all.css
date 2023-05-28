@@ -358,6 +358,7 @@ main {
   display: flex;
   justify-content: flex-end;
   width: 100%;
+  overflow-y: hidden;
 }
 @media (max-width: 1439px) {
   .home_banner > .home_banner_icon {
@@ -375,13 +376,28 @@ main {
     width: 117px;
   }
 }
+.home_banner > .home_banner_icon > .btn_arrow_down:nth-child(1) {
+  animation: arrow_down_move 2.5s 0.6s ease-in-out infinite;
+}
+.home_banner > .home_banner_icon > .btn_arrow_down:nth-child(2) {
+  animation: arrow_down_move 2.5s 0.4s ease-in-out infinite;
+}
+.home_banner > .home_banner_icon > .btn_arrow_down:nth-child(3) {
+  animation: arrow_down_move 2.5s 0.2s ease-in-out infinite;
+}
 
 @keyframes arrow_down_move {
   0% {
-    transform: translateY(-20px);
+    transform: translateY(100%);
+  }
+  30% {
+    transform: translateY(0);
+  }
+  80% {
+    transform: translateY(0);
   }
   100% {
-    transform: translateY(20px);
+    transform: translateY(-100%);
   }
 }
 .home_service {
