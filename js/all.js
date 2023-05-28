@@ -171,6 +171,9 @@ Vue.createApp({
                     return
                 }
             })
+        },
+        backToTop () {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     },
     mounted() {
