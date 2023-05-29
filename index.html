@@ -295,7 +295,9 @@
                     <h2 class="display03">這些超酷的應用，都來自 AI工具王</h2>
                 </div>
                 <label for="search" class="home_product_search_label">
-                    <input name="search" type="search" placeholder="輸入關鍵字搜尋">
+                    <input name="search" type="search" placeholder="輸入關鍵字搜尋"
+                    v-model="searchWord"
+                    @input="() => searchWordFilter()">
                     <div class="home_product_search_icon">
                         <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -314,7 +316,7 @@
                                         d="M0.83333 1.74008C2.18 3.46675 4.66666 6.66675 4.66666 6.66675V10.6667C4.66666 11.0334 4.96666 11.3334 5.33333 11.3334H6.66666C7.03333 11.3334 7.33333 11.0334 7.33333 10.6667V6.66675C7.33333 6.66675 9.81333 3.46675 11.16 1.74008C11.5 1.30008 11.1867 0.666748 10.6333 0.666748H1.36C0.806663 0.666748 0.49333 1.30008 0.83333 1.74008Z" />
                                 </svg>
                                 <div class="home_product_filter_btn_num">
-                                    <p class="fs-1">1</p>
+                                    <p class="fs-1">{{tagBtnNum}}</p>
                                 </div>
                             </div>
                         </button>
@@ -336,13 +338,16 @@
                         <option value="由舊到新" class="fs-3">由舊到新</option>
                     </select>
                     <!-- component -->
-                    <div class="home_product_filter_card" :class="{ show:categoryCard}">
+                    <div class="home_product_filter_card" :class="{ show:categoryCard}"
+                    v-for="(tagBtn, index) in products.data" :key="index">
                         <div class="home_product_filter_card_container">
                             <h1 class="fs-1 home_product_filter_card_category">AI 模型</h1>
-                            <ul class="home_product_filter_card_list">
+                            <ul class="home_product_filter_card_list" >
                                 <li class="fs-3">
                                     <label for="item-1">所有模型</label>
-                                    <input type="radio" name="category_ai" id="item-1">
+                                    <input type="checkbox" name="category_ai" id="item-1"
+                                    v-model="tagBtnName" value="all" 
+                                    @change="() => toggleTagBtnName_AllOption('all')">
                                     <div class="home_product_filter_card_list_icon">
                                         <svg width="16" height="16" viewBox="0 0 16 16"
                                             xmlns="http://www.w3.org/2000/svg">
@@ -351,9 +356,11 @@
                                         </svg>
                                     </div>
                                 </li>
-                                <li class="fs-3">
-                                    <label for="item-2">卡卡</label>
-                                    <input type="radio" name="category_ai" id="item-2">
+                                <li class="fs-3" >
+                                    <label for="item-2">{{tagBtn.discordId}}</label>
+                                    <input type="checkbox" name="category_ai" id="item-2"
+                                    v-model="tagBtnName" :value="tagBtn.discordId"
+                                    @change="() => toggleTagBtnName_AllOption(tagBtn.discordId)">
                                     <div class="home_product_filter_card_list_icon">
                                         <svg width="16" height="16" viewBox="0 0 16 16"
                                             xmlns="http://www.w3.org/2000/svg">
@@ -364,7 +371,9 @@
                                 </li>
                                 <li class="fs-3">
                                     <label for="item-3">杰杰</label>
-                                    <input type="radio" name="category_ai" id="item-3">
+                                    <input type="checkbox" name="category_ai" id="item-3"
+                                    v-model="tagBtnName" value="杰杰"
+                                    @change="() => toggleTagBtnName_AllOption('杰杰')">
                                     <div class="home_product_filter_card_list_icon">
                                         <svg width="16" height="16" viewBox="0 0 16 16"
                                             xmlns="http://www.w3.org/2000/svg">
@@ -373,6 +382,7 @@
                                         </svg>
                                     </div>
                                 </li>
+<!--                                 
                                 <li class="fs-3">
                                     <label for="item-4">琪琪</label>
                                     <input type="radio" name="category_ai" id="item-4">
@@ -394,7 +404,7 @@
                                                 stroke-linecap="round" stroke-linejoin="round" />
                                         </svg>
                                     </div>
-                                </li>
+                                </li> -->
                             </ul>
                         </div>
                         <div class="home_product_filter_card_container">
@@ -402,7 +412,9 @@
                             <ul class="home_product_filter_card_list">
                                 <li class="fs-3">
                                     <label for="item-6">所有類型</label>
-                                    <input type="radio" name="category_project" id="item-6">
+                                    <input type="checkbox" name="category_project" id="item-6"
+                                    v-model="tagBtnType" value="all" 
+                                    @change="() => toggleTagBtnType_AllOption('all')">
                                     <div class="home_product_filter_card_list_icon">
                                         <svg width="16" height="16" viewBox="0 0 16 16"
                                             xmlns="http://www.w3.org/2000/svg">
@@ -412,8 +424,10 @@
                                     </div>
                                 </li>
                                 <li class="fs-3">
-                                    <label for="item-7">篩選項目 1</label>
-                                    <input type="radio" name="category_project" id="item-7">
+                                    <label for="item-7">{{tagBtn.type}}</label>
+                                    <input type="checkbox" name="category_project" id="item-7"
+                                    v-model="tagBtnType" :value="tagBtn.type"
+                                    @change="() => toggleTagBtnType_AllOption(tagBtn.type)">
                                     <div class="home_product_filter_card_list_icon">
                                         <svg width="16" height="16" viewBox="0 0 16 16"
                                             xmlns="http://www.w3.org/2000/svg">
@@ -424,7 +438,9 @@
                                 </li>
                                 <li class="fs-3">
                                     <label for="item-8">篩選項目 2</label>
-                                    <input type="radio" name="category_project" id="item-8">
+                                    <input type="checkbox" name="category_project" id="item-8"
+                                    v-model="tagBtnType" value="2"
+                                    @change="() => toggleTagBtnType_AllOption('2')">
                                     <div class="home_product_filter_card_list_icon">
                                         <svg width="16" height="16" viewBox="0 0 16 16"
                                             xmlns="http://www.w3.org/2000/svg">
@@ -433,6 +449,7 @@
                                         </svg>
                                     </div>
                                 </li>
+<!--                                 
                                 <li class="fs-3">
                                     <label for="item-9">篩選項目 3</label>
                                     <input type="radio" name="category_project" id="item-9">
@@ -476,38 +493,36 @@
                                                 stroke-linecap="round" stroke-linejoin="round" />
                                         </svg>
                                     </div>
-                                </li>
+                                </li> -->
                             </ul>
                         </div>
                     </div>
                 </div>
                 <div class="home_product_card">
                     <ul class="home_product_card_container">
-                        <li v-for="(item, index) in productCard" :key="index">
+                        <li v-for="(item, index) in productsRender" :key="item.id">
                             <a :href="item.href">
                                 <div class="home_product_card_img">
-                                    <img :src="item.imgUrl" alt="封面圖">
+                                    <img :src="item.imageUrl" alt="封面圖">
                                 </div>
                                 <div class="home_product_card_text">
                                     <h2 class="fs-4 home_product_card_title">{{item.title}}</h2>
-                                    <p class="fs-2 home_product_card_sub">{{item.content}}</p>
+                                    <p class="fs-2 home_product_card_sub">{{item.description}}</p>
                                 </div>
                             </a>
                             <div class="home_product_card_name">
-                                <p class="fs-3">{{item.style}}</p>
-                                <p class="fs-3">{{item.name}}</p>
+                                <p class="fs-3">{{item.model}}</p>
+                                <p class="fs-3">{{item.discordId}}</p>
                             </div>
                             <div class="home_product_card_hashtag">
-                                <p class="fs-3">{{item.tag}}</p>
-                                <button type="button" class=" home_product_card_btn">
-                                    <div class="home_product_card_btn_icon">
+                                <p class="fs-3">{{item.type}}</p>
+                                <a  class=" home_product_card_btn" :href="item.link">
                                         <svg width="18" height="20" viewBox="0 0 18 20"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <path
                                                 d="M15 14.08C14.24 14.08 13.56 14.38 13.04 14.85L5.91 10.7C5.96 10.47 6 10.24 6 10C6 9.76 5.96 9.53 5.91 9.3L12.96 5.19C13.5 5.69 14.21 6 15 6C16.66 6 18 4.66 18 3C18 1.34 16.66 0 15 0C13.34 0 12 1.34 12 3C12 3.24 12.04 3.47 12.09 3.7L5.04 7.81C4.5 7.31 3.79 7 3 7C1.34 7 0 8.34 0 10C0 11.66 1.34 13 3 13C3.79 13 4.5 12.69 5.04 12.19L12.16 16.35C12.11 16.56 12.08 16.78 12.08 17C12.08 18.61 13.39 19.92 15 19.92C16.61 19.92 17.92 18.61 17.92 17C17.92 15.39 16.61 14.08 15 14.08Z" />
                                         </svg>
-                                    </div>
-                                </button>
+                                </a>
                             </div>
                         </li>
                         <!--                         <li>

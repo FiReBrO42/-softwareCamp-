@@ -1,5 +1,4 @@
-const apiUrl = 'https://vue3-course-api.hexschool.io/';
-const apiPath = 'firebro42';
+const apiUrl = 'https://2023-engineer-camp.zeabur.app/api/v1/works';
 
 Vue.createApp({
     data() {
@@ -17,72 +16,9 @@ Vue.createApp({
             {name: '行銷', active: false},
             {name: '客服', active: false},
             {name: '生產力', active: false},        ],
-        /* 產品卡 */
-        productCard: [
-            {
-                page:'1',
-                title:'Chatbot Builder',
-                content:'建立智能化的聊天機器人，解答常見問題、提供客戶支援、收集反饋等。',
-                name:'卡卡',
-                style:'AI 模型',
-                tag:'#聊天',
-                href:'',
-                imgUrl:'https://images.unsplash.com/photo-1655720837928-38b1a93298ac?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=555&q=80'
-            },
-            {
-                page:'1',
-                title:'Image Recognition Platform',
-                content:'專業的圖像識別平台，識別圖像、分類、標記等。',
-                name:'杰杰',
-                style:'AI 模型',
-                tag:'#影像辨識',
-                href:'',
-                imgUrl:'https://images.unsplash.com/photo-1655720840699-67e72c0909d1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=967&q=80'
-            },
-            {
-                page:'1',
-                title:'Language Translation API',
-                content:'專業的語言翻譯 API，實現文本翻譯功能，支援多種格式的文本。',
-                name:'琪琪',
-                style:'AI 模型',
-                tag:'#翻譯',
-                href:'',
-                imgUrl:'https://images.unsplash.com/photo-1655720031554-a929595ffad7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80'
-            },
-            {
-                page:'1',
-                title:'Sentiment Analysis API',
-                content:'自動識別文本中的情感傾向，包括正向、負向和中性等。適用於情感分析、社交媒體監控、市場調查等。',
-                name:'昊昊',
-                style:'AI 模型',
-                tag:'#行銷',
-                href:'',
-                imgUrl:'https://images.unsplash.com/photo-1655720828018-edd2daec9349?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1032&q=80'
-            },
-            {
-                page:'1',
-                title:'Fraud Detection Platform',
-                content:'預防詐騙活動，適用於銀行、金融、電商等。',
-                name:'卡卡',
-                style:'AI 模型',
-                tag:'#客服',
-                href:'',
-                imgUrl:'https://images.unsplash.com/photo-1655635643532-fa9ba2648cbe?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1032&q=80'
-            },
-            {
-                page:'1',
-                title:'Voice Assistant SDK',
-                content:'通過語音控制應用程式、設備，實現多種功能，例如播放音樂、查詢天氣、發送信息等。',
-                name:'杰杰',
-                style:'AI 模型',
-                tag:'#生產力',
-                href:'',
-                imgUrl:'https://images.unsplash.com/photo-1655721529468-d0d81b2dc489?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80'
-            }
-        ],
         /* 分頁 */
-        current: 1,
-        total: 10,
+        current:1,
+        total: 1,
         pageSize: 5,
         /*常見問題  */
         qAs:[
@@ -111,8 +47,28 @@ Vue.createApp({
                 answer:'如果在使用過程中遇到問題，您可以聯繫惡扶或技術支持人員進行諮詢或報告問題。您也可以。您也可以通過網站上的幫助中心或社區論壇尋找相關的解決方案和回答。',
                 active:false,
             }
-        ]
-      }
+        ],
+        /* API資料 */
+        products:[],
+        productsRender:[],
+        productsPage:[],
+        /* 篩選表單 */
+        tagBtnName:['all'],
+        tagBtnType:['all'],
+        tagBtnNum:2,
+        /* 關鍵字搜尋 */
+        searchWord:''    
+    }
+    },
+    watch: {
+        tagBtnName() {
+            this.tagBtnNum= 0
+            this.tagBtnNum = this.tagBtnName.length + this.tagBtnType.length;
+          },
+        tagBtnType() {
+            this.tagBtnNum= 0
+            this.tagBtnNum = this.tagBtnName.length + this.tagBtnType.length;
+        },
     },
     computed: {
         startPage() {
@@ -125,12 +81,20 @@ Vue.createApp({
         },
         visiblePages() {
             //計算可見的分頁範圍，起始頁數跟最終頁數  
-          let pages = []
-            //pages 會回傳陣列 [ 起始頁數，中間的數字，最終頁數]
-          for (let i = this.startPage; i <= this.endPage; i++) {
-            pages.push(i)
+            let pages = []
+            /* 如果當渲染資料為空的時候，直接回傳空陣列，隱藏分頁 */
+            if(this.productsRender.length === 0) {
+              return pages
           }
-          return pages
+          else {
+                //pages 會回傳陣列 [ 起始頁數，中間的數字，最終頁數]
+              for (let i = this.startPage; i <= this.endPage; i++) {
+                pages.push(i)
+              }
+              return pages
+
+          }
+          
         }
       },
     methods: {
@@ -141,11 +105,11 @@ Vue.createApp({
         /* 篩選頁切換 */
         categoryCardOpen () {
             this.categoryCard = !this.categoryCard
-            console.log(this.categoryCard)
         },
         /* 篩選TAG */
         categoryTagSwitch (index) {
-            /* 處理陣列資料，尋找對應的index 的 資料 */
+
+            /* 觸發篩選按鈕是否點擊， 處理陣列資料，尋找對應的index 的 資料 */
             this.categoryTag.forEach((tag, i) => {
                 /* 如果是該筆資料，就會轉換成true */
                 if (i === index) {
@@ -155,7 +119,23 @@ Vue.createApp({
                     tag.active = false
                 }
             })
+
+            /* 篩選API資料 */
+                /* 取得篩選標籤名 */
+            let tagName = this.categoryTag[index].name
+
+            if( tagName === "全部"){
+                /* 把原始全部資料重新賦予給主要渲染資料 */
+                this.productsRender = this.products.data
+                return 
+            } else {
+                /* 篩選資料 */
+                this.productsRender =this.productsRender.filter((item,index)=> {
+                    return item.type === tagName
+                } )
+            }
         },
+        /* 上下頁 */
         prevPage() {
             this.current = Math.max(1, this.current - 1)
         },
@@ -164,7 +144,6 @@ Vue.createApp({
         },
         /* 常見問體切換 */
         qASwitch (index) {
-            console.log(`${index}`)
             this.qAs.forEach((item,key) => {
                 if( key === index){
                     item.active = !item.active
@@ -174,10 +153,79 @@ Vue.createApp({
         },
         backToTop () {
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        },
+        /* API */
+        getApi () {
+            axios.get(`${apiUrl}`)
+            .then((res) => {
+                /* 產品 */
+                this.products = res.data.ai_works
+                    /* 主要渲染 */
+                this.productsRender = res.data.ai_works.data
+                /* 分頁 */
+                this.total = res.data.ai_works.page.total_pages
+                this.current = res.data.ai_works.page.current_page
+
+            })
+        },
+        toggleTagBtnName_AllOption (tagValue) {
+            /* 判斷是否為空陣列，則添加ALL */
+            if (this.tagBtnName.length === 0) {
+                this.tagBtnName = ['all']
+            }
+            else {
+                    /* 判斷點擊的按鈕是否為ALL ，不是的話則將ALL刪除掉
+                    如果是的話則添加ALL(避免陣列為空資料) */
+                this.tagBtnName = tagValue !== "all" ?this.tagBtnName.filter(item => item !== "all") : ["all"];
+            }
+
+            this.updateProductsRender()
+        },
+        toggleTagBtnType_AllOption (tagValue) {
+            /* 判斷是否為空陣列，則添加ALL */
+            if (this.tagBtnType.length === 0) {
+                this.tagBtnType = ['all']
+            }
+            else {
+                /* 判斷點擊的按鈕是否為ALL ，不是的話則將ALL刪除掉
+                    如果是的話則添加ALL(避免陣列為空資料) */
+                this.tagBtnType = tagValue !== "all" ?this.tagBtnType.filter(item => item !== "all") : ["all"];
+            }
+            this.updateProductsRender()
+        },
+        updateProductsRender() {
+            if (this.tagBtnName.includes("all") && this.tagBtnType.includes("all")) {
+              this.productsRender = this.products.data;
+            } else {
+              this.productsRender = this.products.data.filter((item) => {
+                return (
+                  (this.tagBtnName.includes("all") || this.tagBtnName.includes(item.discordId)) &&
+                  (this.tagBtnType.includes("all") || this.tagBtnType.includes(item.type))
+                );
+              });
+            }
+          },
+        searchWordFilter () {
+            /* 將資料賦予給obj 已取得完整資料 */
+            let obj = this.products.data
+            /* 如果輸入欄為空 */
+            if(this.searchWord === ""){
+                this.productsRender = obj
+            }
+            else {
+                /* 根據輸入欄的關鍵字進行搜尋，避免大小寫差異，因此全部轉為小寫 */
+                this.productsRender = obj.filter((item) => {
+                    return item.title.toLowerCase().includes(this.searchWord.toLowerCase());
+                })
+            }
+        },
+        init () {
+            this.getApi()
+        },
+
     },
     mounted() {
-        
+        this.init()
     },
   })
 

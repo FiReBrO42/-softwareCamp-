@@ -111,6 +111,9 @@ main {
 .hamMenu_btn_open {
     display: none;
     width: 1rem;
+    &:hover {
+        cursor: pointer;
+    }
 
     @media (max-width: 1439px) {
         & {
@@ -156,6 +159,9 @@ main {
         
         & > .hamMenu_btn_close {
             width: 1rem;
+            &:hover {
+                cursor: pointer;
+            }
         }
     }
 
@@ -989,15 +995,11 @@ main {
                     & > .home_product_card_btn {
                         width: 1.5rem;
                         aspect-ratio: 1/1;
-
                         border: unset;
                         background: unset;
-                        & > .home_product_card_btn_icon {
-                            width: 100%;height: 100%;
-                            & > svg {
+                            &  svg {
                                 fill: $black-100;
                             }
-                        }
                     }
                 }
 
