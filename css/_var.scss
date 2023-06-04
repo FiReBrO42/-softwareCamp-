@@ -10,7 +10,7 @@ $black-0  :#ffffff;
 /* font */
 .fs-9 {
     font-size: 3rem;
-    @media (max-width: 1439px) {
+    @media (max-width: 992px) {
         & {
             font-size: 2rem;
         }
@@ -21,7 +21,7 @@ $black-0  :#ffffff;
 }
 .fs-7 {
     font-size: 2rem;
-    @media (max-width: 1439px) {
+    @media (max-width: 992px) {
         & {
             font-size: 1.25rem;
         }
@@ -50,7 +50,7 @@ $black-0  :#ffffff;
 }
 .display02 {
     font-size: 7.5rem;
-    @media (max-width: 1439px) {
+    @media (max-width: 992px) {
         & {
             font-size: 3rem;
         }
@@ -58,7 +58,7 @@ $black-0  :#ffffff;
 }
 .display03 {
     font-size: 5rem;
-    @media (max-width: 1439px) {
+    @media (max-width: 992px) {
         & {
             font-size: 2rem;
         }
