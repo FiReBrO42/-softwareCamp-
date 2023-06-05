@@ -62,8 +62,8 @@ Vue.createApp({
       productsPage: [],
       /* 篩選表單 */
       tagIdArray:[],
-      tagBtnName: ["all"],
-      tagBtnType:"",
+      tagBtnName: "all",
+      tagBtnType:"all",
       tagBtnTypeList: [
         { name: "問答服務" },
         { name: "虛擬客服" },
@@ -87,9 +87,12 @@ Vue.createApp({
     },
     tagBtnName() {
       this.calculateTagBtnNum();
+      console.log(this.tagBtnName);
+
     },
     tagBtnType() {
       this.calculateTagBtnNum();
+      console.log(this.tagBtnType);
     },
     /* 排序監測 */
     sortOrder() {
@@ -197,7 +200,6 @@ Vue.createApp({
           res.data.ai_works.data.forEach((item) => {
             this.tagIdArray.push(item.discordId);
           });
-            console.log(this.tagIdArray);
         })
         .catch((err) => {
             alert(err.response.message)
@@ -237,7 +239,6 @@ Vue.createApp({
       /* 判斷是否為空陣列，則添加ALL */
       if (this.tagBtnName === "all") {
         this.apiRefresh()
-        console.log("重刷");
       } else {
 
       /* 渲染用 */
@@ -256,7 +257,6 @@ Vue.createApp({
               this.tagBtnType === item.type)
           );
         });
-        console.log(this.productsRender);
       });
       }
     },
@@ -268,7 +268,6 @@ Vue.createApp({
         this.type = this.tagBtnType
         this.apiRefresh()
       }
-      console.log(this.tagBtnType);
       
     },
     searchWordFilter() {
@@ -296,13 +295,15 @@ Vue.createApp({
     },
     calculateTagBtnNum() {
       this.tagBtnNum = 2;
-      if (this.tagBtnName.includes("all") && this.tagBtnType.includes("all")) {
+      if (this.tagBtnName === "all" && this.tagBtnType === "all") {
         this.tagBtnNum = 0;
       }
-      if (this.tagBtnName.includes("all") || this.tagBtnType.includes("all")) {
+      else if (this.tagBtnName === "all" || this.tagBtnType === "all") {
         this.tagBtnNum = 1;
       }
-    },
+    
+      console.log('這個', this.tagBtnNum);
+    },    
     init() {
       this.getApi();
     },
