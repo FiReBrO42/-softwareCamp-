@@ -20,7 +20,9 @@ Vue.createApp({
       /* 分頁 */
       current: 1,
       total: 1,
-      pageSize: 5,
+      pageSize: 4,
+      has_pre: false,
+      has_next: true,
       /*常見問題  */
       qAs: [
         {
@@ -59,8 +61,9 @@ Vue.createApp({
       productsRender: [],
       productsPage: [],
       /* 篩選表單 */
+      tagIdArray:[],
       tagBtnName: ["all"],
-      tagBtnType: ["all"],
+      tagBtnType:"",
       tagBtnTypeList: [
         { name: "問答服務" },
         { name: "虛擬客服" },
@@ -70,32 +73,33 @@ Vue.createApp({
         { name: "行銷文案" },
       ],
       tagBtnNum: 0,
+      type:'',
       /* 關鍵字搜尋 */
       searchWord: "",
       /* 排序 */
       sortOrder: "由新到舊",
+      sort:0,
     };
   },
   watch: {
+    tagBtnNum(){
+      console.log(this.tagBtnNum);
+    },
     tagBtnName() {
       this.calculateTagBtnNum();
-      console.log(this.tagBtnNum);
     },
     tagBtnType() {
       this.calculateTagBtnNum();
-      console.log(this.tagBtnNum);
     },
     /* 排序監測 */
     sortOrder() {
       // 根據時間排序
       if (this.sortOrder === "由新到舊") {
-        return this.productsRender.sort(
-          (a, b) => b.create_time - a.create_time
-        );
+        this.sort = 0
+        this.apiRefresh()
       } else if (this.sortOrder === "由舊到新") {
-        return this.productsRender.sort(
-          (a, b) => a.create_time - b.create_time
-        );
+        this.sort = 1
+        this.apiRefresh()
       } else {
         // 默認情控下返回原本的
         return this.productsRender.reverse();
@@ -151,26 +155,16 @@ Vue.createApp({
       /* 篩選API資料 */
       /* 取得篩選標籤名 */
       let tagName = this.categoryTag[index].name;
-
+      this.type = tagName
       if (tagName === "全部") {
+        this.type = ""
         /* 把原始全部資料重新賦予給主要渲染資料 */
-        this.productsRender = this.products.data;
+        this.apiRefresh()
         return;
       } else {
         /* 篩選資料 */
-        this.productsRender = this.products.data.filter((item, index) => {
-          return item.type === tagName;
-        });
+        this.apiRefresh()
       }
-    },
-    /* 上下頁 */
-    prevPage() {
-      this.current = Math.max(1, this.current - 1);
-      getApiPage();
-    },
-    nextPage() {
-      this.current = Math.min(this.total, this.current + 1);
-      getApiPage();
     },
     /* 常見問體切換 */
     qASwitch(index) {
@@ -186,77 +180,96 @@ Vue.createApp({
     },
     /* API */
     getApi() {
-      axios.get(`${apiUrl}`).then((res) => {
-        /* 產品 */
-        this.products = res.data.ai_works;
-        /* 主要渲染 */
-        this.productsRender = res.data.ai_works.data;
-        console.log(this.productsRender);
-        /* 分頁 */
-        this.total = res.data.ai_works.page.total_pages;
-        this.current = res.data.ai_works.page.current_page;
-      });
-    },
-    setCurrentPage(page) {
-      this.current = page;
-      this.getApiPage();
-    },
-    getApiPage() {
-      axios
-        .get(`${apiUrl}?_page=${this.current_page}&_limit=${this.pageSize}`)
+      axios.get(`${apiUrl}`)
         .then((res) => {
           /* 產品 */
           this.products = res.data.ai_works;
           /* 主要渲染 */
           this.productsRender = res.data.ai_works.data;
-          console.log(this.productsRender);
+    
           /* 分頁 */
           this.total = res.data.ai_works.page.total_pages;
+          this.has_pre = res.data.ai_works.page.has_pre;
+          this.has_next = res.data.ai_works.page.has_next;
           this.current = res.data.ai_works.page.current_page;
+
+          this.tagIdArray=[]
+          res.data.ai_works.data.forEach((item) => {
+            this.tagIdArray.push(item.discordId);
+          });
+            console.log(this.tagIdArray);
+        })
+        .catch((err) => {
+            alert(err.response.message)
+        });
+    },
+    setCurrentPage(page) {
+      this.current = page;
+      this.getApiPage(page);
+    },
+    /* 上下頁 */
+    prevPage(CurrentPage) {
+      this.current = Math.max(1, this.current - 1);
+      this.getApiPage(CurrentPage);
+    },
+    nextPage(CurrentPage) {
+      this.current = Math.min(this.total, this.current + 1);
+      this.getApiPage(CurrentPage);
+    },
+    getApiPage(CurrentPage=1) {
+      axios.get(`${apiUrl}?page=${CurrentPage}&search=${this.searchWord}&sort=${this.sort}&type=${this.type}`)
+        .then((res) => {
+          /* 主要渲染 */
+          this.productsRender = res.data.ai_works.data;
+          /* 分頁 */
+          this.total = res.data.ai_works.page.total_pages;
+          this.has_pre = res.data.ai_works.page.has_pre
+          this.has_next = res.data.ai_works.page .has_next
+          this.total=res.data.ai_works.page.total_pages
+
+          this.tagIdArray=[]
+          res.data.ai_works.data.forEach((item) => {
+            this.tagIdArray.push(item.discordId);
+          });
         });
     },
     toggleTagBtnName_AllOption(tagValue) {
       /* 判斷是否為空陣列，則添加ALL */
-      if (this.tagBtnName.length === 0) {
-        this.tagBtnName = ["all"];
+      if (this.tagBtnName === "all") {
+        this.apiRefresh()
+        console.log("重刷");
       } else {
-        /* 判斷點擊的按鈕是否為ALL ，不是的話則將ALL刪除掉
-                    如果是的話則添加ALL(避免陣列為空資料) */
-        this.tagBtnName =
-          tagValue !== "all"
-            ? this.tagBtnName.filter((item) => item !== "all")
-            : ["all"];
-      }
 
-      this.updateProductsRender();
-    },
-    toggleTagBtnType_AllOption(tagValue) {
-      /* 判斷是否為空陣列，則添加ALL */
-      if (this.tagBtnType.length === 0) {
-        this.tagBtnType = ["all"];
-      } else {
-        /* 判斷點擊的按鈕是否為ALL ，不是的話則將ALL刪除掉
-                    如果是的話則添加ALL(避免陣列為空資料) */
-        this.tagBtnType =
-          tagValue !== "all"
-            ? this.tagBtnType.filter((item) => item !== "all")
-            : ["all"];
-      }
-      this.updateProductsRender();
-    },
-    updateProductsRender() {
-      if (this.tagBtnName.includes("all") && this.tagBtnType.includes("all")) {
-        this.productsRender = this.products.data;
-      } else {
-        this.productsRender = this.products.data.filter((item) => {
+      /* 渲染用 */
+      let obj = []
+      axios.get(`${apiUrl}?page=${this.current}&search=${this.searchWord}&sort=${this.sort}&type=${this.type}`)
+      .then((res) => {
+        obj = res.data.ai_works.data
+
+        /* 篩選符合ID的項目 */
+        this.productsRender = obj.filter((item) => {
           return (
-            (this.tagBtnName.includes("all") ||
-              this.tagBtnName.includes(item.discordId)) &&
-            (this.tagBtnType.includes("all") ||
-              this.tagBtnType.includes(item.type))
+            (this.tagBtnName === "all" ||
+              this.tagBtnName === item.discordId)
+            &&
+            (this.tagBtnType === "" ||
+              this.tagBtnType === item.type)
           );
         });
+        console.log(this.productsRender);
+      });
       }
+    },
+    toggleTagBtnType() {
+      if (this.tagBtnType === 'all') {
+        this.type = ""
+        this.apiRefresh()
+      }else {
+        this.type = this.tagBtnType
+        this.apiRefresh()
+      }
+      console.log(this.tagBtnType);
+      
     },
     searchWordFilter() {
       /* 將資料賦予給obj 已取得完整資料 */
@@ -265,21 +278,29 @@ Vue.createApp({
       if (this.searchWord === "") {
         this.productsRender = obj;
       } else {
-        /* 根據輸入欄的關鍵字進行搜尋，避免大小寫差異，因此全部轉為小寫 */
-        this.productsRender = obj.filter((item) => {
-          return item.title
-            .toLowerCase()
-            .includes(this.searchWord.toLowerCase());
-        });
+        this.apiRefresh()
       }
     },
+    apiRefresh () {
+      axios.get(`${apiUrl}?page=${this.current}&search=${this.searchWord}&sort=${this.sort}&type=${this.type}`)
+      .then((res) => {
+        /* 主要渲染 */
+        this.productsRender = res.data.ai_works.data;
+        this.total=res.data.ai_works.page.total_pages
+
+        this.tagIdArray=[]
+        res.data.ai_works.data.forEach((item) => {
+          this.tagIdArray.push(item.discordId);
+        });
+      });
+    },
     calculateTagBtnNum() {
-      this.tagBtnNum = this.tagBtnName.length + this.tagBtnType.length;
+      this.tagBtnNum = 2;
       if (this.tagBtnName.includes("all") && this.tagBtnType.includes("all")) {
         this.tagBtnNum = 0;
       }
       if (this.tagBtnName.includes("all") || this.tagBtnType.includes("all")) {
-        this.tagBtnNum--;
+        this.tagBtnNum = 1;
       }
     },
     init() {
